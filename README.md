@@ -18,7 +18,7 @@ These instructions will get you a copy of the project up and running on your loc
 1. Clone the repository: `git clone https://github.com/Justine-Retiro/remind-me-note.git`
 2. Navigate to the project directory: `cd remind-me-note`
 3. Install dependencies: `npm install` or if you're using Yarn: `yarn install`
-4. Start the Expo development server: `npm expo`
+4. Start the Expo development server: `npx expo`
 5. Use the Expo Go app on your mobile device to scan the QR code, or run on an emulator.
 
 ## Development Workflow
