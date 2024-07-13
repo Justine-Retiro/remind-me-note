@@ -6,7 +6,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Splash } from './src/Splash';
 import { Boot } from './src/Boot';
+import { Note } from './src/Note';
 import { loadUserData } from './src/utils/userDataManager'; // Make sure this path is correct
+
 
 const Stack = createStackNavigator();
 
@@ -27,8 +29,16 @@ export default function App() {
 
         // Check for existing user data
         const userData = await loadUserData();
+        const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+        const userDataMoodTimestamp = userData?.mood?.timestamp;
+        console.log(userDataMoodTimestamp);
+        
         if (userData && userData.userName) {
-          setInitialRoute('Boot');
+          if (userDataMoodTimestamp && Date.now() - userDataMoodTimestamp > twentyFourHours) {
+            setInitialRoute('Boot');
+          } else {
+            setInitialRoute('Note');
+          }
         } else {
           setInitialRoute('Splash');
         }
@@ -51,6 +61,7 @@ export default function App() {
       <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Splash" component={Splash} />
         <Stack.Screen name="Boot" component={Boot} />
+        <Stack.Screen name="Note" component={Note} />
       </Stack.Navigator>
     </NavigationContainer>
   );

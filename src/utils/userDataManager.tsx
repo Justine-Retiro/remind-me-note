@@ -32,7 +32,7 @@ export const loadUserData = async () => {
       const moodAge = now - data.moodTimestamp;
       if (moodAge > 24 * 60 * 60 * 1000) { // 24 hours in milliseconds
         data.mood = null;
-        data.moodTimestamp = null;
+        data.moodTimestamp = new Date().getHours();
       }
     }
     
