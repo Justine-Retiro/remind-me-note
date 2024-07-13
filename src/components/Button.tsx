@@ -1,4 +1,4 @@
-import { Text, Pressable } from 'react-native'
+import { Text, Pressable, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import * as Font from 'expo-font';
 
@@ -9,8 +9,8 @@ interface ButtonProps {
 
 export const Button: React.FC<ButtonProps> = ({ text, onPress }) => {
   return (
-    <Pressable className='px-4 py-4 bg-[#8E97FD] flex items-center rounded-lg ' onPress={onPress}>
+    <TouchableOpacity className='px-4 py-4 w-auto bg-[#8E97FD] flex items-center rounded-lg ' onPress={onPress}>
       <Text className='text-white'>{text}</Text>
-    </Pressable>
+    </TouchableOpacity>
   )
 }
