@@ -13,7 +13,7 @@ const MoodDisplay = ({ mood, onPress, isSelected }) => {
       `}
       onPress={() => onPress(mood)}
     >
-      <StyledText className="text-black text-2xl">
+      <StyledText className="text-white text-center text-4xl mt-1 ml-[2px]">
         {mood}
       </StyledText>
     </StyledTouchableOpacity>

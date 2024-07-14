@@ -6,9 +6,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Splash } from './src/Splash';
 import { Boot } from './src/Boot';
-import { Note } from './src/Note';
+import { Main } from './src/Main';
 import { loadUserData } from './src/utils/userDataManager'; // Make sure this path is correct
-
 
 const Stack = createStackNavigator();
 
@@ -29,17 +28,21 @@ export default function App() {
 
         // Check for existing user data
         const userData = await loadUserData();
+        console.log('Loaded user data:', userData);
+
         const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-        const userDataMoodTimestamp = userData?.mood?.timestamp;
-        console.log(userDataMoodTimestamp);
-        
+        const userDataMoodTimestamp = userData?.moodTimestamp;
+
         if (userData && userData.userName) {
           if (userDataMoodTimestamp && Date.now() - userDataMoodTimestamp > twentyFourHours) {
+            console.log('Mood expired, redirecting to Boot');
             setInitialRoute('Boot');
           } else {
-            setInitialRoute('Note');
+            console.log('Mood not expired, redirecting to Main');
+            setInitialRoute('Main');
           }
         } else {
+          console.log('No user data, redirecting to Splash');
           setInitialRoute('Splash');
         }
       } catch (e) {
@@ -61,7 +64,7 @@ export default function App() {
       <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Splash" component={Splash} />
         <Stack.Screen name="Boot" component={Boot} />
-        <Stack.Screen name="Note" component={Note} />
+        <Stack.Screen name="Main" component={Main} />
       </Stack.Navigator>
     </NavigationContainer>
   );

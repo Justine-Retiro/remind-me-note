@@ -1,16 +1,22 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { saveUserData, loadUserData } from './utils/userDataManager';
 import * as Font from 'expo-font';
 import { Appearance } from 'react-native';
 import MoodButton from './components/MoodDisplay';
+import { StatusBar } from 'expo-status-bar';
+import Greeting from './components/Greeting';
+import Dashboard from './components/Dashboard';
+import ButtonSort from './components/ButtonSort';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useNavigation } from '@react-navigation/native';
 
-
-export const Note = () => {
+export const Main = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [userData, setUserData] = useState({ userName: '', mood: ''});
   const [greeting, setGreeting] = useState('');
-
+  const [selectedFilter, setSelectedFilter] = useState('Notes');
+  const navigation = useNavigation();
   useEffect(() => {
     async function prepare() {
       try {
@@ -50,9 +56,6 @@ export const Note = () => {
     }
   };
 
-  
-
-
   const loadStoredData = async () => {
     const storedData = await loadUserData();
     if (storedData) {
@@ -60,37 +63,42 @@ export const Note = () => {
     }
   };
 
+  
+
+  const filters = [
+    { name: 'Notes', icon: 'notes' },
+    { name: 'Reminder', icon: 'radio-button-on' }
+  ];
+
   return (
     <View className="w-screen h-screen bg-white">
-        <View className="flex-1 items-center">
-            <View className="mt-16">
-              <View className='absolute bottom-0 left-0 right-0 z-10 items-center'>
-                  <Image
-                    className='w-screen -bottom-full'
-                    source={require('../assets/bg2.png')}
-                    resizeMode="cover"
-                />
-              </View>
-            </View>
-            <View className='w-full px-[20px] flex-1 justify-start'>
-                <View className='flex flex-row justify-between'>
-                  <View>
-                    <Text className="font-regular text-start text-[32px] text-slate-800">{greeting},</Text>
-                    <Text className="text-start font-bold text-[32px] text-slate-800 capitalize">{userData.userName}</Text>
-                  </View>
-                      <MoodButton
-                        mood={userData.mood}
-                      />
-                </View>
-            </View>
-            <View className="absolute bottom-0 left-0 right-0 -z-10 items-center">
+      <View className="flex-1 items-center px-3 ">
+        {/* BG */}
+        <View className="mt-16">
+          <View className='absolute bottom-0 left-0 right-0 z-10 items-center'>
             <Image
-                className="w-screen scale-150 -bottom-1/4"
-                source={require('../assets/elipse.png')}
-                resizeMode="contain"
+              className='w-screen -bottom-full'
+              source={require('../assets/bg2.png')}
+              resizeMode="cover"
             />
-            </View>
+          </View>
         </View>
+        {/* Dashboard */}
+        <Greeting/>
+        <Dashboard />
+        <View className="flex flex-row mt-6 w-full justify-between">
+          {filters.map((filter) => (
+            <ButtonSort
+              key={filter.name}
+              filter={filter.name}
+              icon={filter.icon}
+              isSelected={selectedFilter === filter.name}
+              onPress={() => setSelectedFilter(filter.name)}
+            />
+          ))}
+        </View>
+      </View>
+      <StatusBar style="auto" />
     </View>
-  )
-}
+  );
+};

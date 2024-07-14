@@ -1,9 +1,10 @@
 import React from 'react';
-import { TouchableOpacity, Text } from 'react-native';
+import { TouchableOpacity, Text, View } from 'react-native';
 import { styled } from 'nativewind';
 
 const StyledTouchableOpacity = styled(TouchableOpacity);
 const StyledText = styled(Text);
+const StyledView = styled(View);
 
 const MoodButton = ({ mood, onPress, isSelected }) => {
   return (
@@ -17,9 +18,11 @@ const MoodButton = ({ mood, onPress, isSelected }) => {
       `}
       onPress={() => onPress(mood)}
     >
-      <StyledText className="text-white text-2xl">
-        {mood}
-      </StyledText>
+      <StyledView className="flex-1 justify-center items-center">
+        <StyledText className="text-white text-center text-4xl mt-1">
+          {mood}
+        </StyledText>
+      </StyledView>
     </StyledTouchableOpacity>
   );
 };

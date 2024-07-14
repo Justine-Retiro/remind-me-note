@@ -6,6 +6,7 @@ import { Button } from './components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MoodButton from './components/MoodBtn';
 import { saveUserData, loadUserData } from './utils/userDataManager';
+import { useNavigation } from '@react-navigation/native';
 
 NativeWindStyleSheet.setOutput({
   default: 'native',
@@ -16,7 +17,7 @@ export const Boot = () => {
   const [storedName, setStoredName] = useState('');
   const [selectedMood, setSelectedMood] = useState(null);
   const [userData, setUserData] = useState({ name: '', mood: null });
-
+  const navigation = useNavigation();
   useEffect(() => {
     async function loadFonts() {
       await Font.loadAsync({
@@ -44,15 +45,15 @@ export const Boot = () => {
     await saveUserData(newUserData);
   };
 
-  const handleClearData = async () => {
-    await clearUserData();
-    setUserData({ name: '', mood: null });
-  };
+  // const handleClearData = async () => {
+  //   await clearUserData();
+  //   setUserData({ name: '', mood: null });
+  // };
 
-  const moods = [':<', ':(', ':|', ':)', ':>'];
+  const moods = ['☹️', '🙁', '😐', '🙂', '😃'];
 
   const handleButtonPress = () => {
-    console.log('Button pressed');
+    navigation.navigate('Main');
   };
 
   if (!fontsLoaded) {
