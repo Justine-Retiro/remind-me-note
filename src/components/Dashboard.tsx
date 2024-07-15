@@ -9,6 +9,8 @@ const date = new Date();
 const today = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 const StyledTouchableOpacity = styled(TouchableOpacity);
 
+const day = date.toLocaleDateString('en-US', { weekday: 'long' });
+
 const Dashboard = () =>  {
   return (
     <View className='w-full mt-3'>
@@ -16,7 +18,7 @@ const Dashboard = () =>  {
             <View className='flex-1 mr-4'>
                 <StyledTouchableOpacity className='w-full p-6 bg-violet-300 rounded-3xl'>
                     <Text className='text-white text-sm font-light'>{today}</Text>
-                    <Text className='text-white text-sm font-bold'>Friday</Text>
+                    <Text className='text-white text-sm font-bold'>{day}</Text>
                     <Text className='text-white text-4xl font-bold '>Today</Text>
                     <View className='flex-row items-center'>
                         <View className='bg-white/30 p-2 rounded-xl mr-2'>

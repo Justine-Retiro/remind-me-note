@@ -10,6 +10,8 @@ import Dashboard from './components/Dashboard';
 import ButtonSort from './components/ButtonSort';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
+import HeaderBottom from './components/HeaderBottom';
+import moment from 'moment';
 
 export const Main = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -17,6 +19,9 @@ export const Main = () => {
   const [greeting, setGreeting] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('Notes');
   const navigation = useNavigation();
+  const [selectedDate, setSelectedDate] = useState(moment());
+  const [dates, setDates] = useState([]);
+
   useEffect(() => {
     async function prepare() {
       try {
@@ -42,6 +47,17 @@ export const Main = () => {
       }
     }
 
+    const startOfMonth = moment().startOf('month');
+    const endOfMonth = moment().endOf('month');
+    const daysInMonth = [];
+    let day = startOfMonth;
+
+    while (day <= endOfMonth) {
+      daysInMonth.push(day.clone());
+      day = day.clone().add(1, 'd');
+    }
+    setDates(daysInMonth);
+
     prepare();
   }, []);
 
@@ -62,7 +78,9 @@ export const Main = () => {
       setUserData(storedData);
     }
   };
-
+  const handleDateSelect = (date) => {
+    setSelectedDate(date);
+  };
   
 
   const filters = [
@@ -97,6 +115,11 @@ export const Main = () => {
             />
           ))}
         </View>
+        <HeaderBottom 
+          selectedDate={selectedDate}
+          dates={dates}
+          onDateSelect={handleDateSelect}
+        />
       </View>
       <StatusBar style="auto" />
     </View>
