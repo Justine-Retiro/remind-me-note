@@ -10,7 +10,7 @@ export const saveUserData = async (data) => {
       moodTimestamp: data.mood ? Date.now() : null,
     };
     await FileSystem.writeAsStringAsync(FILE_PATH, JSON.stringify(dataToSave));
-    console.log('Data saved successfully');
+    console.log('Data saved successfully', dataToSave);
   } catch (error) {
     console.error('Error saving data:', error);
   }
@@ -32,7 +32,7 @@ export const loadUserData = async () => {
       const moodAge = now - data.moodTimestamp;
       if (moodAge > 24 * 60 * 60 * 1000) { // 24 hours in milliseconds
         data.mood = null;
-        data.moodTimestamp = null; // Set to null when mood is expired
+        data.moodTimestamp = null;
       }
     }
     

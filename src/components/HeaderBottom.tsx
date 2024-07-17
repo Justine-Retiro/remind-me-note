@@ -1,13 +1,16 @@
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Platform, Appearance } from 'react-native';
 import React, { useState } from 'react';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const HeaderBottom = ({ selectedDate, onDateSelect, onMonthChange }) => {
   const currentMonth = selectedDate.clone().startOf('month');
   const currentYear = selectedDate.year();
+  const currentHour = new Date().getHours();
+  const displayMode = currentHour >= 18 ? 'dark' : (Appearance.getColorScheme() === 'dark' ? 'dark' : 'default');
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const dates = [];
   let day = currentMonth.clone().startOf('month');
@@ -16,73 +19,43 @@ const HeaderBottom = ({ selectedDate, onDateSelect, onMonthChange }) => {
     day.add(1, 'day');
   }
 
-  const handlePrevMonth = () => {
-    const prevMonth = currentMonth.clone().subtract(1, 'month');
-    onMonthChange(prevMonth);
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
   };
 
-  const handleNextMonth = () => {
-    const nextMonth = currentMonth.clone().add(1, 'month');
-    onMonthChange(nextMonth);
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
   };
 
-  const handleMonthYearSelect = (month, year) => {
-    const selectedMonth = moment(`${year}-${month}`, 'YYYY-MM');
-    onMonthChange(selectedMonth);
-    setIsDropdownOpen(false);
+  const handleConfirm = (date) => {
+    onMonthChange(moment(date));
+    hideDatePicker();
   };
 
-  const renderMonthYearDropdown = () => {
-    const months = moment.months();
-    const years = Array.from({ length: 5 }, (_, index) => currentYear + index);
-
-    return (
-      <View className="absolute top-10 right-0 bg-white border border-gray-300 rounded-lg shadow-lg">
-        {months.map((month, index) => (
-          <TouchableOpacity
-            key={month}
-            onPress={() => handleMonthYearSelect(index + 1, currentYear)}
-            className="px-4 py-2 border-b border-gray-300"
-          >
-            <Text className="text-gray-800">{month}</Text>
-          </TouchableOpacity>
-        ))}
-        {years.map((year) => (
-          <TouchableOpacity
-            key={year}
-            onPress={() => handleMonthYearSelect(currentMonth.month() + 1, year)}
-            className="px-4 py-2"
-          >
-            <Text className="text-gray-800">{year}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-    );
-  };
+  
 
   return (
     <View className="w-full h-auto">
       <View className="mt-3 flex justify-between">
         <View className="flex flex-row justify-between">
           <View className="flex flex-row gap-2 items-end">
-            <Text className="font-semibold text-start text-[20px] text-slate-800">
+            <Text className={`font-semibold text-start text-[20px] ${new Date().getHours() >= 18 ? 'text-white' : 'text-slate-800'}`}>
               Reminders List
             </Text>
-            <Text className="text-start font-regular text-[16px] text-slate-400">
+            <Text className={`text-start font-regular text-[16px] ${new Date().getHours() >= 18 ? 'text-white' : 'text-slate-400'}`}>
               on this month
             </Text>
           </View>
         </View>
         <View className="flex flex-row items-center">
-          <TouchableOpacity onPress={() => setIsDropdownOpen(!isDropdownOpen)}>
+          <TouchableOpacity onPress={showDatePicker}>
             <View className="flex flex-row items-center">
-              <Text className="font-semibold text-start text-[16px] text-slate-600">
-                {currentMonth.format('YYYY MMMM')}
+              <Text className={`font-semibold text-start text-[16px] ${new Date().getHours() >= 18 ? 'text-white' : 'text-slate-600'}`}>
+                {currentMonth.format('MMMM YYYY')}
               </Text>
-              <Icon name="keyboard-arrow-down" size={20} color="black" />
+              <Icon name="keyboard-arrow-down" size={20} color={new Date().getHours() >= 18 ? 'gray' : 'black'} />
             </View>
           </TouchableOpacity>
-          {isDropdownOpen && renderMonthYearDropdown()}
         </View>
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -115,6 +88,22 @@ const HeaderBottom = ({ selectedDate, onDateSelect, onMonthChange }) => {
           ))}
         </View>
       </ScrollView>
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        display={Platform.OS === 'ios' ? 'inline' : displayMode}
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+        date={selectedDate.toDate()}
+        maximumDate={moment().add(5, 'years').toDate()}
+        minimumDate={moment().toDate()}
+        textColor={displayMode === 'dark' ? 'white' : 'black'}
+        themeVariant={{}}
+        cancelTextIOS="Cancel"
+        confirmTextIOS="Confirm"
+        headerTextIOS="Select Date"
+        locale="en_US"
+      />
     </View>
   );
 };

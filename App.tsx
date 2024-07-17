@@ -8,6 +8,8 @@ import { Splash } from './src/Splash';
 import { Boot } from './src/Boot';
 import { Main } from './src/Main';
 import { loadUserData } from './src/utils/userDataManager'; // Make sure this path is correct
+import { ReminderAdd } from './src/ReminderAdd';
+import { NoteAdd } from './src/NoteAdd';
 
 const Stack = createStackNavigator();
 
@@ -34,7 +36,7 @@ export default function App() {
         const userDataMoodTimestamp = userData?.moodTimestamp;
 
         if (userData && userData.userName) {
-          if (userDataMoodTimestamp && Date.now() - userDataMoodTimestamp > twentyFourHours) {
+          if ((userDataMoodTimestamp && Date.now() - userDataMoodTimestamp > twentyFourHours) || userDataMoodTimestamp === null) {
             console.log('Mood expired, redirecting to Boot');
             setInitialRoute('Boot');
           } else {
@@ -65,6 +67,8 @@ export default function App() {
         <Stack.Screen name="Splash" component={Splash} />
         <Stack.Screen name="Boot" component={Boot} />
         <Stack.Screen name="Main" component={Main} />
+        <Stack.Screen name="ReminderAdd" component={ReminderAdd} />
+        <Stack.Screen name="NoteAdd" component={NoteAdd} />
       </Stack.Navigator>
     </NavigationContainer>
   );

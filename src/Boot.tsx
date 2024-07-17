@@ -16,7 +16,7 @@ export const Boot = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [storedName, setStoredName] = useState('');
   const [selectedMood, setSelectedMood] = useState(null);
-  const [userData, setUserData] = useState({ name: '', mood: null });
+  const [userData, setUserData] = useState({ name: '', mood: '' });
   const navigation = useNavigation();
   useEffect(() => {
     async function loadFonts() {
@@ -42,6 +42,7 @@ export const Boot = () => {
   const handleMoodSelection = async (mood) => {
     const newUserData = { ...userData, mood };
     setUserData(newUserData);
+    console.log(newUserData);
     await saveUserData(newUserData);
   };
 
@@ -52,8 +53,16 @@ export const Boot = () => {
 
   const moods = ['☹️', '🙁', '😐', '🙂', '😃'];
 
-  const handleButtonPress = () => {
-    navigation.navigate('Main');
+  const handleButtonPress = async () => {
+    try {
+      await saveUserData(userData);
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Main' }],
+      });
+    } catch (error) {
+      console.error('Error saving user data:', error);
+    }
   };
 
   if (!fontsLoaded) {
@@ -62,12 +71,12 @@ export const Boot = () => {
 
 
   return (
-    <View className="w-screen h-screen bg-[#8E97FD]">
+    <View className={`w-screen h-screen ${new Date().getHours() >= 18 ? 'bg-[#03174C]' : 'bg-[#8E97FD]'}`}>
         <View className="flex-1 items-center">
             <View className="mt-16">
               <View className='absolute bottom-0 left-0 right-0 z-10 items-center'>
                   <Image
-                    className='w-screen -bottom-full'
+                    className={`w-screen ${new Date().getHours() >= 18 ? 'hidden' : '-bottom-full'}`}
                     source={require('../assets/bg2.png')}
                     resizeMode="cover"
                 />
@@ -75,12 +84,12 @@ export const Boot = () => {
             </View>
             <View className='h-auto px-[4px] mt-32'>
                 <View className='mb-12'>
-                  <Text className="font-bold text-[32px] text-center text-slate-800">Hi {userData.userName}, Welcome</Text>
-                  <Text className="mb-[55px] text-center font-regular text-[32px] text-slate-800">to Re:note Mind</Text>
+                  <Text className={`font-bold text-[32px] text-center ${new Date().getHours() >= 18 ? 'text-white' : 'text-slate-800'}`}>Hi {userData.userName}, Welcome</Text>
+                  <Text className={`mb-[55px] text-center font-regular text-[32px] ${new Date().getHours() >= 18 ? 'text-white' : 'text-slate-800'}`}>to Re:note Mind</Text>
                 </View>
                 
                 <View className='mb-[45px]'>
-                  <Text className='font-semiBold text-[#3F414E] text-center'>How are you today?</Text>
+                  <Text className={`font-semiBold text-center ${new Date().getHours() >= 18 ? 'text-white' : 'text-slate-800'}`}>How are you today?</Text>
                   <View className="flex-row justify-center mt-4">
                     {moods.map((mood) => (
                       <MoodButton
@@ -99,8 +108,8 @@ export const Boot = () => {
             </View>
             <View className="absolute bottom-0 left-0 right-0 -z-10 items-center">
             <Image
-                className="w-screen scale-150 -bottom-1/4"
-                source={require('../assets/elipse.png')}
+                className={`${new Date().getHours() >= 18 ? 'w-screen scale-110' : 'w-screen scale-150 -bottom-1/4'}`}
+                source={new Date().getHours() >= 18 ? require('../assets/bg-1.png') : require('../assets/elipse.png')}
                 resizeMode="contain"
             />
             </View>

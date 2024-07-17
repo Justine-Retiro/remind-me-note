@@ -9,7 +9,7 @@ const MoodDisplay = ({ mood, onPress, isSelected }) => {
   return (
     <StyledTouchableOpacity
       className={`
-        w-14 h-14 rounded-full justify-center items-center mx-1 'bg-transparent border-2 border-[#8E97FD]
+        w-14 h-14 rounded-full justify-center items-center
       `}
       onPress={() => onPress(mood)}
     >

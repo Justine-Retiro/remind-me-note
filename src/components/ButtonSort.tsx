@@ -10,7 +10,7 @@ const ButtonSort = ({ filter, icon, onPress, isSelected }) => {
   return (
     <StyledTouchableOpacity
       className={`
-        px-4 py-2 w-[48%] rounded-xl justify-center items-start bg-transparent border-2 border-[#8E97FD]
+        px-4 py-2 w-[48%] rounded-xl justify-center items-start bg-transparent border-2  border-[#8E97FD]
         ${isSelected ? 'bg-[#8E97FD]' : 'bg-transparent border-2 border-[#8E97FD]'}
       `}
       onPress={onPress}
