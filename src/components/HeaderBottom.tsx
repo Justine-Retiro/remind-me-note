@@ -4,7 +4,7 @@ import moment from 'moment';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
-const HeaderBottom = ({ selectedDate, onDateSelect, onMonthChange }) => {
+const HeaderBottom = ({ selectedDate, onDateSelect, onMonthChange, reminders }) => {
   const currentMonth = selectedDate.clone().startOf('month');
   const currentYear = selectedDate.year();
   const currentHour = new Date().getHours();
@@ -19,6 +19,11 @@ const HeaderBottom = ({ selectedDate, onDateSelect, onMonthChange }) => {
     day.add(1, 'day');
   }
 
+  // Filter dates to include only those that have tasks
+  const datesWithTasks = dates.filter(date => 
+    reminders.some(reminder => moment(reminder.dateTime).isSame(date, 'day'))
+  );
+
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
@@ -31,8 +36,6 @@ const HeaderBottom = ({ selectedDate, onDateSelect, onMonthChange }) => {
     onMonthChange(moment(date));
     hideDatePicker();
   };
-
-  
 
   return (
     <View className="w-full h-auto">
@@ -60,7 +63,7 @@ const HeaderBottom = ({ selectedDate, onDateSelect, onMonthChange }) => {
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <View className="flex flex-row justify-between mt-4 overflow-x-scroll">
-          {dates.map((date) => (
+          {datesWithTasks.map((date) => (
             <TouchableOpacity
               key={date.format('YYYY-MM-DD')}
               onPress={() => onDateSelect(date)}

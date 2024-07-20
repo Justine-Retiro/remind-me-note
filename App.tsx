@@ -7,9 +7,19 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Splash } from './src/Splash';
 import { Boot } from './src/Boot';
 import { Main } from './src/Main';
-import { loadUserData } from './src/utils/userDataManager'; // Make sure this path is correct
+import { loadUserData, registerForPushNotificationsAsync, setupNotifications } from './src/utils/userDataManager';
 import { ReminderAdd } from './src/ReminderAdd';
 import { NoteAdd } from './src/NoteAdd';
+import * as Notifications from 'expo-notifications';
+// import { ReminderAddDetails } from './src/ReminderAddDetails';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 const Stack = createStackNavigator();
 
@@ -35,7 +45,7 @@ export default function App() {
         const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
         const userDataMoodTimestamp = userData?.moodTimestamp;
 
-        if (userData && userData.userName) {
+        if (userData && userData.firstTime) {
           if ((userDataMoodTimestamp && Date.now() - userDataMoodTimestamp > twentyFourHours) || userDataMoodTimestamp === null) {
             console.log('Mood expired, redirecting to Boot');
             setInitialRoute('Boot');
@@ -53,8 +63,27 @@ export default function App() {
         setFontsLoaded(true);
       }
     }
-
+    setupNotifications();
     prepare();
+  }, []);
+
+  useEffect(() => {
+    registerForPushNotificationsAsync();
+
+    const notificationListener = Notifications.addNotificationReceivedListener(notification => {
+      console.log(notification);
+      // Handle received notification
+    });
+
+    const responseListener = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log(response);
+      // Handle notification response (e.g., when user taps on the notification)
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener);
+      Notifications.removeNotificationSubscription(responseListener);
+    };
   }, []);
 
   if (!fontsLoaded || initialRoute === null) {
@@ -69,6 +98,7 @@ export default function App() {
         <Stack.Screen name="Main" component={Main} />
         <Stack.Screen name="ReminderAdd" component={ReminderAdd} />
         <Stack.Screen name="NoteAdd" component={NoteAdd} />
+        {/* <Stack.Screen name="ReminderAddDetails" component={ReminderAddDetails} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

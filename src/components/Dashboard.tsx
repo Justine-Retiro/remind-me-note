@@ -8,10 +8,9 @@ import { styled } from 'nativewind';
 const date = new Date();
 const today = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 const StyledTouchableOpacity = styled(TouchableOpacity);
-
 const day = date.toLocaleDateString('en-US', { weekday: 'long' });
 
-const Dashboard = () =>  {
+const Dashboard = ({ eventsToday, completedTasks, pendingTasks }) =>  {
   return (
     <View className='w-full mt-3'>
         <View className='flex-row '>
@@ -25,7 +24,7 @@ const Dashboard = () =>  {
                             <IconAlarm name="alarm-outline" size={28} color="white"/>
                         </View>
                         <View className='flex items-start'>
-                            <Text className='text-white text-xl font-bold'>2</Text>
+                            <Text className='text-white text-xl font-bold'>{eventsToday}</Text>
                             <Text className='text-white text-sm font-regular'>Today's event</Text>
                         </View>
                     </View>
@@ -40,7 +39,7 @@ const Dashboard = () =>  {
                         </View>
                     </View>
                     <View>
-                        <Text className="text-white text-xl font-semibold">20</Text>
+                        <Text className="text-white text-xl font-semibold">{completedTasks}</Text>
                         <Text className="text-white text-sm">Completed</Text>
                     </View>
                 </StyledTouchableOpacity>
@@ -51,7 +50,7 @@ const Dashboard = () =>  {
                         </View>
                     </View>
                     <View>
-                        <Text className="text-white text-2xl font-semibold">2</Text>
+                        <Text className="text-white text-2xl font-semibold">{pendingTasks}</Text>
                         <Text className="text-white text-sm">Pending</Text>
                     </View>
                 </StyledTouchableOpacity>

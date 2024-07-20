@@ -16,7 +16,7 @@ export const Boot = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [storedName, setStoredName] = useState('');
   const [selectedMood, setSelectedMood] = useState(null);
-  const [userData, setUserData] = useState({ name: '', mood: '' });
+  const [userData, setUserData] = useState({ mood: '' });
   const navigation = useNavigation();
   useEffect(() => {
     async function loadFonts() {
@@ -46,14 +46,14 @@ export const Boot = () => {
     await saveUserData(newUserData);
   };
 
-  // const handleClearData = async () => {
-  //   await clearUserData();
-  //   setUserData({ name: '', mood: null });
-  // };
-
   const moods = ['☹️', '🙁', '😐', '🙂', '😃'];
 
   const handleButtonPress = async () => {
+    if (!userData.mood) {
+      Alert.alert('Please select a mood before continuing');
+      return;
+    }
+
     try {
       await saveUserData(userData);
       navigation.reset({
@@ -84,7 +84,7 @@ export const Boot = () => {
             </View>
             <View className='h-auto px-[4px] mt-32'>
                 <View className='mb-12'>
-                  <Text className={`font-bold text-[32px] text-center ${new Date().getHours() >= 18 ? 'text-white' : 'text-slate-800'}`}>Hi {userData.userName}, Welcome</Text>
+                  <Text className={`font-bold text-[32px] text-center ${new Date().getHours() >= 18 ? 'text-white' : 'text-slate-800'}`}>Hi Welcome</Text>
                   <Text className={`mb-[55px] text-center font-regular text-[32px] ${new Date().getHours() >= 18 ? 'text-white' : 'text-slate-800'}`}>to Re:note Mind</Text>
                 </View>
                 

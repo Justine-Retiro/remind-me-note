@@ -18,11 +18,11 @@ const Greeting = ({ userData, greeting }) => {
       <View style={{ paddingHorizontal: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
         <View>
           <Text className={`font-regular text-3xl ${new Date().getHours() >= 18 ? 'text-white' : 'text-black'}`}>
-            {greeting},
+            {greeting}
           </Text>
-          <Text className={`font-bold text-3xl ${new Date().getHours() >= 18 ? 'text-white' : 'text-black'}`}>
+          {/* <Text className={`font-bold text-3xl ${new Date().getHours() >= 18 ? 'text-white' : 'text-black'}`}>
             {userData.userName}
-          </Text>
+          </Text> */}
         </View>
         <MoodButton
           mood={userData.mood}

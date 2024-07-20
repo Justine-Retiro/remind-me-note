@@ -8,11 +8,11 @@ interface ButtonProps {
   onPress?: () => void;
 }
 
-export const Button: React.FC<ButtonProps> = ({ text, onPress, icon } :  {text: string, onPress: () => void, icon: string }) => {
+export const ButtonNavigation: React.FC<ButtonProps> = ({ text, onPress, icon } :  {text: string, onPress: () => void, icon: string }) => {
   return (
-    <TouchableOpacity className='px-4 py-4 w-auto bg-[#8E97FD] flex flex-row justify-center items-center rounded-2xl ' onPress={onPress}>
-      <Icon name={icon} size={24} color="white" />
+    <TouchableOpacity className='px-4 py-4 w-auto bg-[#8E97FD] flex flex-row justify-between items-center rounded-2xl ' onPress={onPress}>
       <Text className='text-white ml-1 font-semibold text-base'>{text}</Text>
+      <Icon name={icon} size={24} color="white" />
     </TouchableOpacity>
   )
 }
