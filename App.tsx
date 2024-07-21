@@ -10,6 +10,7 @@ import { Main } from './src/Main';
 import { loadUserData, registerForPushNotificationsAsync, setupNotifications } from './src/utils/userDataManager';
 import { ReminderAdd } from './src/ReminderAdd';
 import { NoteAdd } from './src/NoteAdd';
+import { NoteDetail } from './src/NoteDetail';
 import * as Notifications from 'expo-notifications';
 // import { ReminderAddDetails } from './src/ReminderAddDetails';
 
@@ -98,7 +99,7 @@ export default function App() {
         <Stack.Screen name="Main" component={Main} />
         <Stack.Screen name="ReminderAdd" component={ReminderAdd} />
         <Stack.Screen name="NoteAdd" component={NoteAdd} />
-        {/* <Stack.Screen name="ReminderAddDetails" component={ReminderAddDetails} /> */}
+        <Stack.Screen name="NoteDetail" component={NoteDetail} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -21,11 +21,20 @@ interface Reminder {
   status: 'pending' | 'done';
 }
 
+interface Note {
+  id: string;
+  title: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface UserData {
   mood?: string;
   moodTimestamp?: number;
   userName?: string;
   reminders: Reminder[];
+  notes: Note[];
 }
 
 // -----------------
@@ -35,13 +44,14 @@ export const saveUserData = async (data: UserData) => {
     const dataToSave = {
       ...data,
       moodTimestamp: data.mood ? Date.now() : null,
+      reminders: data.reminders || [],
       notes: data.notes || [], // Ensure notes is always an array
     };
     await FileSystem.writeAsStringAsync(FILE_PATH, JSON.stringify(dataToSave));
     console.log('Data saved successfully', dataToSave);
   } catch (error) {
     console.error('Error saving data:', error);
-    throw error; // Re-throw the error so it can be caught in the calling function
+    throw error;
   }
 };
 
@@ -50,7 +60,7 @@ export const loadUserData = async (): Promise<UserData | null> => {
     const fileInfo = await FileSystem.getInfoAsync(FILE_PATH);
     if (!fileInfo.exists) {
       console.log('No user data file exists');
-      return { reminders: [] };
+      return { reminders: [], notes: [] }; // Initialize both reminders and notes
     }
     const content = await FileSystem.readAsStringAsync(FILE_PATH);
     const data: UserData = JSON.parse(content);
@@ -65,9 +75,12 @@ export const loadUserData = async (): Promise<UserData | null> => {
       }
     }
     
-    // Ensure reminders array exists
+    // Ensure reminders and notes arrays exist
     if (!data.reminders) {
       data.reminders = [];
+    }
+    if (!data.notes) {
+      data.notes = [];
     }
     
     return data;

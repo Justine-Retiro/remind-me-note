@@ -17,7 +17,7 @@ import CustomRepeatModal from './components/CustomRepeatModal';
 
 export const Main = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  const [userData, setUserData] = useState({ userName: '', mood: '', reminders: [] });
+  const [userData, setUserData] = useState({ userName: '', mood: '', reminders: [], notes: [] });
   const [greeting, setGreeting] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('Notes');
   const navigation = useNavigation();
@@ -86,6 +86,10 @@ export const Main = () => {
     }
   };
 
+  const handleNotePress = (id: string) => {
+    navigation.navigate('NoteDetail', { id });
+  };
+
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await loadStoredData();
@@ -147,7 +151,10 @@ export const Main = () => {
       const storedData = await loadUserData();
       console.log('Loaded stored data:', JSON.stringify(storedData));
       if (storedData) {
-        setUserData(storedData);
+        setUserData({
+          ...storedData,
+          notes: storedData.notes || [], // Ensure notes is always an array
+        });
         setGreeting(getGreeting());
 
         const todayStart = moment().startOf('day');
@@ -247,9 +254,16 @@ export const Main = () => {
             />
           )}
 
-          {selectedFilter === 'Notes' && 
-          //  {userData.reminders
-          <NoteCards />}
+          {selectedFilter === 'Notes' && userData.notes && (
+            userData.notes.map((note) => (
+              <NoteCards
+                key={note.id}
+                title={note.title}
+                description={note.description}
+                onPress={() => handleNotePress(note.id)}
+              />
+            ))
+          )}
           
           {selectedFilter === 'Reminder' && 
             <View className='h-full w-full mt-3 rounded-lg'>
@@ -271,8 +285,8 @@ export const Main = () => {
                     />
                   ))}
                 </ScrollView>
-            </View>
-          }
+              </View>
+            }
         </View>
         <StatusBar style={new Date().getHours() >= 18 ? 'light' : 'dark'} />
       </ScrollView>
